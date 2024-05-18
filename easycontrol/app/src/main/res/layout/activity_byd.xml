@@ -30,5 +30,16 @@
         android:layout_height="200dp"
         android:background="@android:color/black"
         android:orientation="vertical" />
+    <Button
+        android:id="@+id/add"
+        android:text="+"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/moreClient"
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:background="@android:color/black"
+        android:orientation="vertical" />
 
 </LinearLayout>

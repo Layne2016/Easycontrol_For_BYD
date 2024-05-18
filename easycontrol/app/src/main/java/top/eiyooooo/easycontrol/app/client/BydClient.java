@@ -66,7 +66,7 @@ public class BydClient {
   private static final boolean supportH265 = PublicTools.isDecoderSupport("hevc");
   private static final boolean supportOpus = PublicTools.isDecoderSupport("opus");
 
-  public BydClient(Device device, UsbDevice usbDevice, int mode, BydActivity bydActivity) {
+  public BydClient(Device device, UsbDevice usbDevice, int mode, BydActivity bydActivity,int flag) {
     for (BydClient client : clientList) {
       if (client.uuid.equals(device.uuid)) {
         if (client.multiLink == 0) client.changeMultiLinkMode(1);
@@ -122,7 +122,7 @@ public class BydClient {
         AppData.uiHandler.post(() -> {
           if (device.nightModeSync) controlPacket.sendNightModeEvent(AppData.nightMode);
 
-          bydActivity.onClientView(clientView);
+          bydActivity.onClientView(clientView,flag);
         });
       } catch (Exception e) {
         L.log(device.uuid, e);

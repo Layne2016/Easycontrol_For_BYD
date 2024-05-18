@@ -7,6 +7,7 @@ import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import top.eiyooooo.easycontrol.app.client.BydClient;
@@ -46,6 +47,7 @@ public class BydActivity extends Activity implements UsbChangeListener {
         int width = height * 1080 / 1920;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
         mainActivity.mainClient.setLayoutParams(layoutParams);
+        mainActivity.moreClient.setLayoutParams(layoutParams);
 
     }
 
@@ -67,13 +69,16 @@ public class BydActivity extends Activity implements UsbChangeListener {
     // 设置按钮监听
     private void setButtonListener() {
         mainActivity.buttonSet.setOnClickListener(v -> startActivity(new Intent(this, SetActivity.class)));
+        mainActivity.add.setOnClickListener(v -> {
+            new BydClient(device,usbDevice,1,this,1);
+        });
     }
 
     @Override
     public void onConnect(Device device, UsbDevice usbDevice) {
         this.device = device;
         this.usbDevice = usbDevice;
-        new BydClient(device, usbDevice, 1, this);
+        new BydClient(device, usbDevice, 0, this,0);
     }
 
     @Override
@@ -82,12 +87,20 @@ public class BydActivity extends Activity implements UsbChangeListener {
         this.usbDevice = null;
     }
 
-    public void onClientView(ClientView clientView) {
+    public void onClientView(ClientView clientView,int flag) {
         clientView.setBydActivity(this);
-        mainActivity.mainClient.addView(clientView.textureView, 0);
-        mainActivity.mainClient.post(() -> {
-            clientView.updateMaxSize(new Pair<>(mainActivity.mainClient.getMeasuredWidth(), mainActivity.mainClient.getMeasuredHeight()));
-        });
+        if (flag==0){
+            mainActivity.mainClient.addView(clientView.textureView, 0);
+            mainActivity.mainClient.post(() -> {
+                clientView.updateMaxSize(new Pair<>(mainActivity.mainClient.getMeasuredWidth(), mainActivity.mainClient.getMeasuredHeight()));
+            });
+        }else {
+            mainActivity.moreClient.addView(clientView.textureView, 0);
+            mainActivity.moreClient.post(() -> {
+                clientView.updateMaxSize(new Pair<>(mainActivity.moreClient.getMeasuredWidth(), mainActivity.moreClient.getMeasuredHeight()));
+            });
+        }
+
     }
 
     public void hide(ClientView clientView) {
