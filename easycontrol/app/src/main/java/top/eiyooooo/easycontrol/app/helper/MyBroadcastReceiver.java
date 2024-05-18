@@ -29,6 +29,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
   private DeviceListAdapter deviceListAdapter;
 
+  private UsbChangeListener usbChangeListener;
+
   // 注册广播
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   public void register(Context context) {
@@ -69,6 +71,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
   public void setDeviceListAdapter(DeviceListAdapter deviceListAdapter) {
     this.deviceListAdapter = deviceListAdapter;
+  }
+
+  public void setUsbChangeListener(UsbChangeListener listener){
+      this.usbChangeListener=listener;
   }
 
   private void handleScreenOff() {
@@ -181,6 +187,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
       }
     }
     if (deviceListAdapter != null) deviceListAdapter.update();
+    if (usbChangeListener != null) usbChangeListener.onDisConnect();
   }
 
   // 处理USB授权结果
@@ -200,6 +207,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
         DeviceListAdapter.linkDevices.put(uuid, usbDevice);
         if (deviceListAdapter != null) deviceListAdapter.update();
+        if (usbChangeListener != null) usbChangeListener.onConnect(device,usbDevice);
         break;
       }
     }

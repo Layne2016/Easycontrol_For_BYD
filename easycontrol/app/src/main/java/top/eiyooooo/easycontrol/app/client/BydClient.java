@@ -8,32 +8,34 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Pair;
+import android.view.Surface;
+import android.view.View;
+import android.view.WindowManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import android.view.Surface;
-import android.view.View;
-import android.view.WindowManager;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import top.eiyooooo.easycontrol.app.BuildConfig;
+import top.eiyooooo.easycontrol.app.BydActivity;
+import top.eiyooooo.easycontrol.app.R;
+import top.eiyooooo.easycontrol.app.adb.Adb;
+import top.eiyooooo.easycontrol.app.buffer.BufferStream;
+import top.eiyooooo.easycontrol.app.client.view.ClientView;
 import top.eiyooooo.easycontrol.app.entity.AppData;
 import top.eiyooooo.easycontrol.app.entity.Device;
 import top.eiyooooo.easycontrol.app.helper.EventMonitor;
 import top.eiyooooo.easycontrol.app.helper.L;
 import top.eiyooooo.easycontrol.app.helper.PublicTools;
-import top.eiyooooo.easycontrol.app.BuildConfig;
-import top.eiyooooo.easycontrol.app.R;
-import top.eiyooooo.easycontrol.app.adb.Adb;
-import top.eiyooooo.easycontrol.app.buffer.BufferStream;
-import top.eiyooooo.easycontrol.app.client.view.ClientView;
 
-public class Client {
+public class BydClient {
   // 状态，0为初始，1为连接，-1为关闭
   private int status = 0;
-  public static final ArrayList<Client> allClient = new ArrayList<>();
+  public static final ArrayList<BydClient> clientList = new ArrayList<>();
 
   // 连接
   public Adb adb;
@@ -64,15 +66,15 @@ public class Client {
   private static final boolean supportH265 = PublicTools.isDecoderSupport("hevc");
   private static final boolean supportOpus = PublicTools.isDecoderSupport("opus");
 
-  public Client(Device device, UsbDevice usbDevice, int mode) {
-    for (Client client : allClient) {
+  public BydClient(Device device, UsbDevice usbDevice, int mode, BydActivity bydActivity) {
+    for (BydClient client : clientList) {
       if (client.uuid.equals(device.uuid)) {
         if (client.multiLink == 0) client.changeMultiLinkMode(1);
         this.multiLink = 2;
         break;
       }
     }
-    allClient.add(this);
+    clientList.add(this);
     if (!EventMonitor.monitorRunning && AppData.setting.getMonitorState()) EventMonitor.startMonitor();
     // 初始化
     uuid = device.uuid;
@@ -120,8 +122,7 @@ public class Client {
         AppData.uiHandler.post(() -> {
           if (device.nightModeSync) controlPacket.sendNightModeEvent(AppData.nightMode);
 
-          if (AppData.setting.getAlwaysFullMode() || device.defaultFull) clientView.changeToFull();
-          else clientView.changeToSmall();
+          bydActivity.onClientView(clientView);
         });
       } catch (Exception e) {
         L.log(device.uuid, e);
@@ -358,7 +359,7 @@ public class Client {
   public void release(String error) {
     if (status == -1) return;
     status = -1;
-    allClient.remove(this);
+    clientList.remove(this);
     if (error != null) PublicTools.logToast(error);
     for (int i = 0; i < 7; i++) {
       try {
@@ -371,9 +372,9 @@ public class Client {
             break;
           case 1:
             if (multiLink == 1) {
-              Client target = null;
+              BydClient target = null;
               boolean multi = false;
-              for (Client client : allClient) {
+              for (BydClient client : clientList) {
                 if (client.uuid.equals(uuid) && client.multiLink == 2) {
                   if (target != null) {
                     multi = true;
@@ -486,7 +487,9 @@ public class Client {
         }
         controlPacket.sendConfigChangedEvent(-displayId);
         if (mode != 0) appTransfer(clientView.device);
-        synchronized (clientView.changeSizeLock) {
+        synchronized
+
+        (clientView.changeSizeLock) {
           clientView.changeSizeLock.set(true);
           clientView.changeSizeLock.notifyAll();
         }

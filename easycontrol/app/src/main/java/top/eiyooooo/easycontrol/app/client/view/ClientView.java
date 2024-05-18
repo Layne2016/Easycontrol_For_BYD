@@ -16,6 +16,8 @@ import android.view.animation.OvershootInterpolator;
 import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
+
+import top.eiyooooo.easycontrol.app.BydActivity;
 import top.eiyooooo.easycontrol.app.adb.Adb;
 import top.eiyooooo.easycontrol.app.client.Client;
 import top.eiyooooo.easycontrol.app.client.ControlPacket;
@@ -40,6 +42,7 @@ public class ClientView implements TextureView.SurfaceTextureListener {
   private final SmallView smallView;
   private final MiniView miniView;
   private FullActivity fullView;
+  private BydActivity bydActivity;
 
   private Pair<Integer, Integer> realDeviceSize;
   private Pair<Integer, Integer> videoSize;
@@ -203,12 +206,17 @@ public class ClientView implements TextureView.SurfaceTextureListener {
     if (fullView != null) fullView.hide();
     if (smallView != null) smallView.hide();
     if (miniView != null) miniView.hide();
+    if (bydActivity != null) bydActivity.hide(this);
     if (isRelease && surfaceTexture != null) surfaceTexture.release();
   }
 
   public void setFullView(FullActivity fullView) {
     this.fullView = fullView;
   }
+  public void setBydActivity(BydActivity fullView) {
+    this.bydActivity = fullView;
+  }
+
 
   public void updateMaxSize(Pair<Integer, Integer> maxSize) {
     if (maxSize == null || maxSize.first == 0 || maxSize.second == 0) return;
