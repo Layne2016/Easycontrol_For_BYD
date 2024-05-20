@@ -48,7 +48,6 @@ public class BydActivity extends Activity implements UsbChangeListener {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
         mainActivity.mainClient.setLayoutParams(layoutParams);
         mainActivity.moreClient.setLayoutParams(layoutParams);
-
     }
 
     private void startApp() {
@@ -70,6 +69,8 @@ public class BydActivity extends Activity implements UsbChangeListener {
     private void setButtonListener() {
         mainActivity.buttonSet.setOnClickListener(v -> startActivity(new Intent(this, SetActivity.class)));
         mainActivity.add.setOnClickListener(v -> {
+            //
+            device.specified_app="com.baidu.BaiduMap";
             new BydClient(device,usbDevice,1,this,1);
         });
     }
