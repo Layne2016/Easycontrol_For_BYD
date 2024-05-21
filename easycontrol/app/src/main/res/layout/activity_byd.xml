@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:paddingTop="5dp"
         android:paddingBottom="15dp">
-
         <ImageView
             android:id="@+id/button_set"
             android:layout_width="54dp"
@@ -20,8 +19,6 @@
             android:padding="15dp"
             android:src="@drawable/bars"
             android:tint="@color/onBackground" />
-
-
     </LinearLayout>
 
     <LinearLayout

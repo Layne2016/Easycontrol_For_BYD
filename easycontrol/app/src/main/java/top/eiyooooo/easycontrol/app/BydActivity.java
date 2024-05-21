@@ -70,8 +70,11 @@ public class BydActivity extends Activity implements UsbChangeListener {
         mainActivity.buttonSet.setOnClickListener(v -> startActivity(new Intent(this, SetActivity.class)));
         mainActivity.add.setOnClickListener(v -> {
             //
-            device.specified_app="com.baidu.BaiduMap";
-            new BydClient(device,usbDevice,1,this,1);
+            device.specified_app = "com.baidu.BaiduMap";
+            Device newDevice = new Device(device.uuid, device.type);
+            Device.copyDevice(this.device,newDevice);
+            newDevice.specified_app="com.baidu.BaiduMap";
+            new BydClient(newDevice, usbDevice, 1, this, 1);
         });
     }
 
@@ -79,7 +82,7 @@ public class BydActivity extends Activity implements UsbChangeListener {
     public void onConnect(Device device, UsbDevice usbDevice) {
         this.device = device;
         this.usbDevice = usbDevice;
-        new BydClient(device, usbDevice, 0, this,0);
+        new BydClient(device, usbDevice, 0, this, 0);
     }
 
     @Override
@@ -88,14 +91,14 @@ public class BydActivity extends Activity implements UsbChangeListener {
         this.usbDevice = null;
     }
 
-    public void onClientView(ClientView clientView,int flag) {
+    public void onClientView(ClientView clientView, int flag) {
         clientView.setBydActivity(this);
-        if (flag==0){
+        if (flag == 0) {
             mainActivity.mainClient.addView(clientView.textureView, 0);
             mainActivity.mainClient.post(() -> {
                 clientView.updateMaxSize(new Pair<>(mainActivity.mainClient.getMeasuredWidth(), mainActivity.mainClient.getMeasuredHeight()));
             });
-        }else {
+        } else {
             mainActivity.moreClient.addView(clientView.textureView, 0);
             mainActivity.moreClient.post(() -> {
                 clientView.updateMaxSize(new Pair<>(mainActivity.moreClient.getMeasuredWidth(), mainActivity.moreClient.getMeasuredHeight()));
