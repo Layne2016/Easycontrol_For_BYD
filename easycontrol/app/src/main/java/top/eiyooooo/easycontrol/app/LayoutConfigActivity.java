@@ -1,5 +1,7 @@
 package top.eiyooooo.easycontrol.app;
 
+import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
@@ -13,8 +15,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
 import top.eiyooooo.easycontrol.app.databinding.ActivityLayoutConfigBinding;
 import top.eiyooooo.easycontrol.app.databinding.DialogLayoutConfigBinding;
+import top.eiyooooo.easycontrol.app.helper.PublicTools;
 import top.eiyooooo.easycontrol.app.widget.CustomControl;
 
 public class LayoutConfigActivity extends Activity {
@@ -23,6 +28,7 @@ public class LayoutConfigActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(SYSTEM_UI_FLAG_FULLSCREEN);
         sp = getSharedPreferences("layout", MODE_PRIVATE);
         String items = sp.getString("items", "");
         layoutConfigBinding = ActivityLayoutConfigBinding.inflate(getLayoutInflater());

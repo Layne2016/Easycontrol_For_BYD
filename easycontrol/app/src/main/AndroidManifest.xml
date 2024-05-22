@@ -26,7 +26,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".LayoutConfigActivity"
+            android:name=".BydActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:exported="true"
             android:screenOrientation="landscape">
@@ -36,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LayoutConfigActivity" android:screenOrientation="landscape"     android:configChanges="keyboardHidden|screenSize|orientation"/>
         <activity
             android:name=".MonitorActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|uiMode"

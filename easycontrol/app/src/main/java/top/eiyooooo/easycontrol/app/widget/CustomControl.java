@@ -193,4 +193,17 @@ public class CustomControl extends FrameLayout {
         });
     }
 
+    public void hideControl() {
+        dragView.setVisibility(GONE);
+        resizeView.setVisibility(GONE);
+    }
+
+    public void setOnPackageClickListener(OnPackageClickListener listener){
+        infoView.setOnClickListener(view -> listener.onInfoClick(infoView.getText().toString().trim()));
+    }
+
+    public boolean packageEq(String flag) {
+        return flag.equals(infoView.getText().toString().trim());
+    }
 }
+

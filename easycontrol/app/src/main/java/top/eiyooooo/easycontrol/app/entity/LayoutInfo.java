@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LayoutInfo {
-    int left;
-    int top;
-    int right;
-    int bottom;
-    int zIndex;
-    String app;
+ public    int left;
+    public  int top;
+    public  int right;
+    public  int bottom;
+    public int zIndex;
+    public  String app;
 
     public LayoutInfo(int left, int top, int right, int bottom, int zIndex, String app) {
         this.left = left;

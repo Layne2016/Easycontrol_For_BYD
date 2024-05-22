@@ -66,7 +66,7 @@ public class BydClient {
   private static final boolean supportH265 = PublicTools.isDecoderSupport("hevc");
   private static final boolean supportOpus = PublicTools.isDecoderSupport("opus");
 
-  public BydClient(Device device, UsbDevice usbDevice, int mode, BydActivity bydActivity,int flag) {
+  public BydClient(Device device, UsbDevice usbDevice, int mode, BydActivity bydActivity,String flag) {
     for (BydClient client : clientList) {
       if (client.uuid.equals(device.uuid)) {
         if (client.multiLink == 0) client.changeMultiLinkMode(1);
